@@ -17,6 +17,7 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+# 1.1. create VPC
 resource "aws_vpc" "proj1" {
   cidr_block = "10.0.0.0/16"
 
@@ -220,8 +221,8 @@ resource "aws_s3_bucket_acl" "acl" {
 # 3.3. upload file to S3 bucket
 resource "aws_s3_object" "object" {
   bucket = aws_s3_bucket.proj1.bucket
-  key    = "customer.csv"
-  source = "${path.root}/file/test/customer.csv"
+  key    = "${var.s3_path}customer.csv"
+  source = "${path.root}/file/customer.csv"
 }
 
 # 4.1. create IAM role for Glue
@@ -283,20 +284,8 @@ resource "aws_glue_crawler" "proj1" {
   name          = "customer_data_crawler"
   role          = aws_iam_role.glue.arn
 
-  configuration = jsonencode(
-    {
-      Grouping = {
-        TableGroupingPolicy = "CombineCompatibleSchemas"
-      }
-      CrawlerOutput = {
-        Partitions = { AddOrUpdateBehavior = "InheritFromTable" }
-      }
-      Version = 1
-    }
-  )
-
   s3_target {
-    path = "s3://${aws_s3_bucket.proj1.bucket}"
+    path = "s3://${aws_s3_bucket.proj1.bucket}/${var.s3_path}"
   }
 }
 

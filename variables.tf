@@ -13,3 +13,7 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
+
+variable "s3_path" {
+  default = "data/customer_database/customer_csv/dataload=20230220"
+}
