@@ -1,6 +1,5 @@
-variable "az" {
-  description = "availability_zone"
-  default = "us-west-2a"
+variable "region" {
+  default = "us-west-2"
 }
 
 variable "private_ip" {
@@ -16,4 +15,15 @@ variable "db_password" {
 
 variable "s3_path" {
   default = "data/customer_database/customer_csv/dataload=20230220"
+}
+
+variable "kdg_username" {
+  description = "Kinesis Data Generator username"
+  default = "admin"
+}
+
+variable "kdg_password" {
+  description = "Kinesis Data Generator password"
+  sensitive   = true
+  default = "Admin123"
 }
